@@ -11,8 +11,8 @@ declare global {
 }
 
 export default function WalletBalance() {
-  const { chain, address, isConnected } = useAccount(); // Текущий аккаунт
-  const [balance, setBalance] = useState<string>(""); // Баланс в ETH
+  const { chain, address, isConnected } = useAccount();
+  const [balance, setBalance] = useState<string>("");
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -28,14 +28,15 @@ export default function WalletBalance() {
     };
 
     fetchBalance();
-  }, [isConnected, address, chain?.id]); // Добавляем `chain?.id` как зависимость для обновления при смене сети
+  }, [isConnected, address, chain?.id]);
 
   return (
-    <div>
+    <div className="p-4 bg-white rounded shadow-md">
       {isConnected && address && (
-        <>
-          <p>Баланс: {balance || "Загрузка..."} ETH</p>
-        </>
+        <p className="text-gray-700">
+          Баланс:{" "}
+          <span className="font-bold">{balance || "Загрузка..."} ETH</span>
+        </p>
       )}
     </div>
   );

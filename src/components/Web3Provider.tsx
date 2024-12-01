@@ -10,7 +10,9 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{children}</ConnectKitProvider>
+        <ConnectKitProvider>
+          <div className="min-h-screen flex flex-col">{children}</div>
+        </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );

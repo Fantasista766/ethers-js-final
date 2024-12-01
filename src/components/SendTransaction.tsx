@@ -1,5 +1,8 @@
+"use client";
+
 import { useRef } from "react";
 import { BrowserProvider, Eip1193Provider, parseEther } from "ethers";
+import Button from "./Button";
 
 declare global {
   interface Window {
@@ -24,30 +27,38 @@ export default function SendTransaction() {
         to: toRef.current?.value,
         value: parseEther(amountRef.current?.value || "0"),
       });
-      console.log(tx);
-      const response = await tx.wait();
-      console.log(response);
+      await tx.wait();
     } catch (error) {
-      console.error(error);
+      console.error("Ошибка при отправке ETH:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSendEther}>
-      <h2>Отправить ETH</h2>
-      <label>
-        Адрес получателя:
-        <input ref={toRef} type="text" style={{ border: "1px solid black" }} />
-      </label>
-      <label>
-        Сумма (ETH):
-        <input
-          type="text"
-          ref={amountRef}
-          style={{ border: "1px solid black" }}
-        />
-      </label>
-      <button type="submit">Отправить</button>
-    </form>
+    <div className="p-4 bg-white rounded shadow-md">
+      <h2 className="text-lg font-semibold text-gray-700">Отправить ETH</h2>
+      <form onSubmit={handleSendEther} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Адрес получателя:
+          </label>
+          <input
+            ref={toRef}
+            type="text"
+            className="border border-gray-300 rounded px-2 py-1 w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Сумма (ETH):
+          </label>
+          <input
+            ref={amountRef}
+            type="text"
+            className="border border-gray-300 rounded px-2 py-1 w-full"
+          />
+        </div>
+        <Button type="submit">Отправить</Button>
+      </form>
+    </div>
   );
 }

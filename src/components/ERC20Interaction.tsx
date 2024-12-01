@@ -18,11 +18,11 @@ const tokenABI = [
 ];
 
 const ERC20Interaction = () => {
-  const { address } = useAccount(); // Подключённый адрес пользователя
+  const { address } = useAccount();
   const [token0Allowance, setToken0Allowance] = useState<string>("0");
   const [token1Allowance, setToken1Allowance] = useState<string>("0");
-  const [token0Amount, setToken0Amount] = useState<string>("10"); // Default 10 LINK
-  const [token1Amount, setToken1Amount] = useState<string>("5"); // Default 5 WETH
+  const [token0Amount, setToken0Amount] = useState<string>("10");
+  const [token1Amount, setToken1Amount] = useState<string>("5");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -57,8 +57,8 @@ const ERC20Interaction = () => {
         spenderAddress
       );
 
-      setToken0Allowance(ethers.formatUnits(allowance0, 18)); // Assuming LINK has 18 decimals
-      setToken1Allowance(ethers.formatUnits(allowance1, 18)); // Assuming WETH has 18 decimals
+      setToken0Allowance(ethers.formatUnits(allowance0, 18));
+      setToken1Allowance(ethers.formatUnits(allowance1, 18));
     } catch (error) {
       console.error("Ошибка при получении разрешений:", error);
     }
@@ -92,7 +92,7 @@ const ERC20Interaction = () => {
       await tx.wait();
       console.log(`${token} утверждено!`);
 
-      fetchAllowances(); // Обновить отображение разрешений
+      fetchAllowances();
     } catch (error) {
       console.error(`Ошибка при утверждении ${token}:`, error);
     } finally {
@@ -101,39 +101,55 @@ const ERC20Interaction = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Взаимодействие с контрактами ERC-20</h2>
-      <div>
-        <h3>LINK</h3>
-        <p>Разрешённое количество: {token0Allowance} LINK</p>
-        <input
-          type="number"
-          value={token0Amount}
-          onChange={(e) => setToken0Amount(e.target.value)}
-          disabled={isLoading}
-        />
-        <button
-          onClick={() => handleApprove("LINK")}
-          disabled={isLoading || !address}
-        >
-          {isLoading ? "Обработка..." : "Утвердить LINK"}
-        </button>
-      </div>
-      <div>
-        <h3>WETH</h3>
-        <p>Разрешённое количество: {token1Allowance} WETH</p>
-        <input
-          type="number"
-          value={token1Amount}
-          onChange={(e) => setToken1Amount(e.target.value)}
-          disabled={isLoading}
-        />
-        <button
-          onClick={() => handleApprove("WETH")}
-          disabled={isLoading || !address}
-        >
-          {isLoading ? "Обработка..." : "Утвердить WETH"}
-        </button>
+    <div className="p-4 bg-white rounded shadow-md space-y-6">
+      <h2 className="text-lg font-semibold text-gray-700">
+        Взаимодействие с контрактами ERC-20
+      </h2>
+      <div className="space-y-4">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-sm font-medium text-gray-600">LINK</h3>
+          <p className="text-sm text-gray-500">
+            Разрешённое количество: {token0Allowance} LINK
+          </p>
+          <div className="flex items-center gap-4">
+            <input
+              type="number"
+              className="border rounded p-2 w-1/2"
+              value={token0Amount}
+              onChange={(e) => setToken0Amount(e.target.value)}
+              disabled={isLoading}
+            />
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onClick={() => handleApprove("LINK")}
+              disabled={isLoading || !address}
+            >
+              {isLoading ? "Обработка..." : "Утвердить LINK"}
+            </button>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <h3 className="text-sm font-medium text-gray-600">WETH</h3>
+          <p className="text-sm text-gray-500">
+            Разрешённое количество: {token1Allowance} WETH
+          </p>
+          <div className="flex items-center gap-4">
+            <input
+              type="number"
+              className="border rounded p-2 w-1/2"
+              value={token1Amount}
+              onChange={(e) => setToken1Amount(e.target.value)}
+              disabled={isLoading}
+            />
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onClick={() => handleApprove("WETH")}
+              disabled={isLoading || !address}
+            >
+              {isLoading ? "Обработка..." : "Утвердить WETH"}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

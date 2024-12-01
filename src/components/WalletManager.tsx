@@ -31,13 +31,18 @@ export default function WalletManager() {
   };
 
   return (
-    <div>
+    <div className="bg-white p-4 rounded shadow">
       {!currentAccount && <p>Кошелек не подключен</p>}
       {currentAccount && (
         <div>
-          <p>Активный аккаунт: {currentAccount}</p>
+          <p className="text-sm break-words">
+            Активный аккаунт:{" "}
+            <span className="block text-blue-600 truncate">
+              {currentAccount}
+            </span>
+          </p>
           <button
-            className="px-4 py-2 bg-red-500 text-white rounded"
+            className="mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
             onClick={handleDisconnect}
           >
             Отключить кошелек

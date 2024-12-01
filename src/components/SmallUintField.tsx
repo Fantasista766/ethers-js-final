@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
+import Button from "./Button";
+import InputField from "./InputField";
 
 const contractAddress = "0xF526C4fB3A22f208058163A34278989D1f953619";
 const contractABI = [
@@ -10,14 +12,12 @@ const contractABI = [
   "function smallUint() public view returns (uint8)",
 ];
 
-const EntranceField = () => {
-  const { address } = useAccount(); // Текущий аккаунт
-
+const SmallUintField = () => {
+  const { address } = useAccount();
   const [smallUint, setSmallUint] = useState<number | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Получение текущего значения smallUint из контракта
   const fetchSmallUint = async () => {
     if (!address) return;
 
@@ -35,7 +35,6 @@ const EntranceField = () => {
     }
   };
 
-  // Отправка нового значения в контракт
   const handleSubmit = async () => {
     if (!address) {
       alert("Подключите кошелек, чтобы отправить данные.");
@@ -59,14 +58,10 @@ const EntranceField = () => {
         signer
       );
 
-      console.log("Отправка транзакции...");
       const tx = await contract.setSmallUint(parsedValue);
-      console.log("Транзакция отправлена:", tx);
+      await tx.wait();
 
-      const receipt = await tx.wait();
-      console.log("Транзакция подтверждена:", receipt);
-
-      await fetchSmallUint(); // Обновление состояния после успешной транзакции
+      await fetchSmallUint();
     } catch (error) {
       console.error("Ошибка при отправке транзакции:", error);
     } finally {
@@ -74,7 +69,6 @@ const EntranceField = () => {
     }
   };
 
-  // Загрузка значения smallUint при подключении кошелька
   useEffect(() => {
     if (address) {
       fetchSmallUint();
@@ -82,25 +76,24 @@ const EntranceField = () => {
   }, [address]);
 
   return (
-    <div className="container">
-      <h2>
-        Текущее значение smallUint:{" "}
-        {smallUint !== null ? smallUint : "Загрузка..."}
-      </h2>
-      <div>
-        <input
-          type="number"
-          min={0}
-          max={255}
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-        />
-        <button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? "Отправка..." : "Отправить новое значение"}
-        </button>
-      </div>
+    <div className="bg-white p-4 rounded shadow-md space-y-4">
+      <h2 className="text-lg font-semibold">Текущее значение smallUint:</h2>
+      <InputField
+        label="Текущее значение"
+        value={smallUint ?? "Загрузка..."}
+        disabled
+      />
+      <InputField
+        label="Новое значение"
+        value={inputValue}
+        onChange={(event) => setInputValue(event.target.value)}
+        type="number"
+      />
+      <Button onClick={handleSubmit} isLoading={isLoading}>
+        Отправить новое значение
+      </Button>
     </div>
   );
 };
 
-export default EntranceField;
+export default SmallUintField;

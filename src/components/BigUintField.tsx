@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
+import Button from "./Button";
+import InputField from "./InputField";
 
 const contractAddress = "0xF526C4fB3A22f208058163A34278989D1f953619";
 const contractABI = [
@@ -11,12 +13,11 @@ const contractABI = [
 ];
 
 const BigUintField = () => {
-  const { address } = useAccount(); // Текущий аккаунт
+  const { address } = useAccount();
   const [bigUint, setBigUint] = useState<bigint | null>(null);
-  const [inputValue, setInputValue] = useState<string>(""); // Для нового значения
+  const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Получение текущего значения bigUint из контракта
   const fetchBigUint = async () => {
     if (!address) return;
 
@@ -34,7 +35,6 @@ const BigUintField = () => {
     }
   };
 
-  // Отправка нового значения в контракт
   const handleSubmit = async () => {
     if (!address) {
       alert("Подключите кошелек, чтобы отправить данные.");
@@ -58,14 +58,10 @@ const BigUintField = () => {
         signer
       );
 
-      console.log("Отправка транзакции...");
       const tx = await contract.setBiglUint(parsedValue);
-      console.log("Транзакция отправлена:", tx);
+      await tx.wait();
 
-      const receipt = await tx.wait();
-      console.log("Транзакция подтверждена:", receipt);
-
-      await fetchBigUint(); // Обновление значения после успешной транзакции
+      await fetchBigUint();
     } catch (error) {
       console.error("Ошибка при отправке транзакции:", error);
     } finally {
@@ -73,7 +69,6 @@ const BigUintField = () => {
     }
   };
 
-  // Загрузка значения bigUint при подключении кошелька
   useEffect(() => {
     if (address) {
       fetchBigUint();
@@ -81,21 +76,22 @@ const BigUintField = () => {
   }, [address]);
 
   return (
-    <div className="container">
-      <h2>
-        Текущее значение bigUint:{" "}
-        {bigUint !== null ? bigUint.toString() : "Загрузка..."}
-      </h2>
-      <div>
-        <input
-          type="number"
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-        />
-        <button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? "Отправка..." : "Отправить новое значение"}
-        </button>
-      </div>
+    <div className="bg-white p-4 rounded shadow-md space-y-4">
+      <h2 className="text-lg font-semibold">Текущее значение bigUint:</h2>
+      <InputField
+        label="Текущее значение"
+        value={bigUint?.toString() ?? "Загрузка..."}
+        disabled
+      />
+      <InputField
+        label="Новое значение"
+        value={inputValue}
+        onChange={(event) => setInputValue(event.target.value)}
+        type="number"
+      />
+      <Button onClick={handleSubmit} isLoading={isLoading}>
+        Отправить новое значение
+      </Button>
     </div>
   );
 };

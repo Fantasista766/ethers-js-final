@@ -9,7 +9,7 @@ import WalletManager from "../components/WalletManager";
 import WalletBalance from "../components/WalletBalance";
 import SendTransaction from "../components/SendTransaction";
 import ContractInteraction from "../components/ContractInteraction";
-import EntranceField from "../components/EntranceField";
+import SmallUintField from "../components/SmallUintField";
 import BigUintField from "../components/BigUintField";
 import ERC20Interaction from "../components/ERC20Interaction";
 
@@ -22,16 +22,23 @@ export default function App() {
 
   return (
     <Web3Provider>
-      <div className="p-4 space-y-4">
-        <ConnectKitButton />
-        <SwitchNetwork />
-        <WalletManager />
-        <WalletBalance />
-        <SendTransaction />
-        <ContractInteraction />
-        <EntranceField />
-        <BigUintField />
-        <ERC20Interaction />
+      <div className="container mx-auto p-6 max-w-screen-2xl">
+        {/* Верхняя панель */}
+        <div className="bg-gray-100 p-4 rounded shadow mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <ConnectKitButton />
+          <SwitchNetwork />
+          <WalletManager />
+          <WalletBalance />
+        </div>
+
+        {/* Сетка с компонентами */}
+        <div className="grid gap-x-6 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <SendTransaction />
+          <ContractInteraction />
+          <SmallUintField />
+          <BigUintField />
+          <ERC20Interaction />
+        </div>
       </div>
     </Web3Provider>
   );
