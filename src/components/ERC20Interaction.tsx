@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 
@@ -25,17 +25,13 @@ const ERC20Interaction = () => {
   const [token1Amount, setToken1Amount] = useState<string>("5");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (address) {
-      fetchAllowances();
-    }
-  }, [address]);
-
-  const fetchAllowances = async () => {
+  const fetchAllowances = useCallback(async () => {
     if (!address) return;
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const signer = await provider.getSigner();
       const token0Contract = new ethers.Contract(
         tokenAddresses.LINK,
@@ -62,7 +58,13 @@ const ERC20Interaction = () => {
     } catch (error) {
       console.error("Ошибка при получении разрешений:", error);
     }
-  };
+  }, [address]);
+
+  useEffect(() => {
+    if (address) {
+      fetchAllowances();
+    }
+  }, [address, fetchAllowances]);
 
   const handleApprove = async (token: "LINK" | "WETH") => {
     if (!address) {
@@ -73,7 +75,9 @@ const ERC20Interaction = () => {
     try {
       setIsLoading(true);
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const signer = await provider.getSigner();
       const tokenContract = new ethers.Contract(
         token === "LINK" ? tokenAddresses.LINK : tokenAddresses.WETH,

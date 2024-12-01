@@ -1,27 +1,31 @@
 "use client";
 
 import { useRef } from "react";
-import { BrowserProvider, Eip1193Provider, parseEther } from "ethers";
+import { BrowserProvider, parseEther } from "ethers";
 import Button from "./Button";
-
-declare global {
-  interface Window {
-    ethereum?: Eip1193Provider;
-  }
-}
 
 export default function SendTransaction() {
   const toRef = useRef<HTMLInputElement>(null);
   const amountRef = useRef<HTMLInputElement>(null);
 
-  const handleSendEther = async (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSendEther = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!window.ethereum) {
+
+    // Явная типизация без использования `any`
+    const ethereum = window.ethereum as {
+      request: (args: {
+        method: string;
+        params?: unknown[];
+      }) => Promise<unknown>;
+    };
+
+    if (!ethereum) {
       console.log("MetaMask не установлен");
       return;
     }
+
     try {
-      const provider = new BrowserProvider(window.ethereum);
+      const provider = new BrowserProvider(ethereum); // Типизация через явное приведение
       const signer = await provider.getSigner();
       const tx = await signer.sendTransaction({
         to: toRef.current?.value,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 
@@ -15,15 +15,21 @@ const ContractInteraction = () => {
   const [isTrue, setIsTrue] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchContractState();
-  }, [address]);
+  const fetchContractState = useCallback(async () => {
+    if (!address) {
+      alert("Подключите кошелек, чтобы взаимодействовать с контрактом.");
+      return;
+    }
 
-  const fetchContractState = async () => {
-    if (!address) return;
+    if (!window.ethereum) {
+      console.error("MetaMask не найден.");
+      return;
+    }
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const contract = new ethers.Contract(
         contractAddress,
         contractABI,
@@ -34,10 +40,14 @@ const ContractInteraction = () => {
     } catch (error) {
       console.error("Ошибка при чтении контракта:", error);
     }
-  };
+  }, [address]);
+
+  useEffect(() => {
+    fetchContractState();
+  }, [address, fetchContractState]);
 
   const handleSetTrue = async (newValue: boolean) => {
-    if (!address) {
+    if (!address || !window.ethereum) {
       alert("Подключите кошелек.");
       return;
     }
@@ -45,7 +55,9 @@ const ContractInteraction = () => {
     setIsLoading(true);
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
         contractAddress,

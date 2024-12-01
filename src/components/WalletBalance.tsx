@@ -1,14 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ethers, BrowserProvider, formatEther } from "ethers";
+import { ethers, formatEther } from "ethers";
 import { useAccount } from "wagmi";
-
-declare global {
-  interface Window {
-    ethereum?: ethers.providers.ExternalProvider;
-  }
-}
 
 export default function WalletBalance() {
   const { chain, address, isConnected } = useAccount();
@@ -18,7 +12,9 @@ export default function WalletBalance() {
     const fetchBalance = async () => {
       if (isConnected && address && window.ethereum) {
         try {
-          const provider = new BrowserProvider(window.ethereum);
+          const provider = new ethers.BrowserProvider(
+            window.ethereum as ethers.Eip1193Provider
+          );
           const balance = await provider.getBalance(address);
           setBalance(formatEther(balance));
         } catch (error) {

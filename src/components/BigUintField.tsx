@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Button from "./Button";
@@ -18,11 +18,13 @@ const BigUintField = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchBigUint = async () => {
-    if (!address) return;
+  const fetchBigUint = useCallback(async () => {
+    if (!address || !window.ethereum) return;
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const contract = new ethers.Contract(
         contractAddress,
         contractABI,
@@ -33,11 +35,16 @@ const BigUintField = () => {
     } catch (error) {
       console.error("Ошибка при получении bigUint:", error);
     }
-  };
+  }, [address]);
 
   const handleSubmit = async () => {
     if (!address) {
       alert("Подключите кошелек, чтобы отправить данные.");
+      return;
+    }
+
+    if (!window.ethereum) {
+      console.error("MetaMask не найден.");
       return;
     }
 
@@ -50,7 +57,9 @@ const BigUintField = () => {
     setIsLoading(true);
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
         contractAddress,
@@ -70,10 +79,8 @@ const BigUintField = () => {
   };
 
   useEffect(() => {
-    if (address) {
-      fetchBigUint();
-    }
-  }, [address]);
+    fetchBigUint();
+  }, [fetchBigUint]);
 
   return (
     <div className="bg-white p-4 rounded shadow-md space-y-4">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
 import Button from "./Button";
@@ -18,11 +18,13 @@ const SmallUintField = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchSmallUint = async () => {
+  const fetchSmallUint = useCallback(async () => {
     if (!address) return;
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const contract = new ethers.Contract(
         contractAddress,
         contractABI,
@@ -33,7 +35,7 @@ const SmallUintField = () => {
     } catch (error) {
       console.error("Ошибка при получении smallUint:", error);
     }
-  };
+  }, [address]);
 
   const handleSubmit = async () => {
     if (!address) {
@@ -50,7 +52,9 @@ const SmallUintField = () => {
     setIsLoading(true);
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(
+        window.ethereum as ethers.Eip1193Provider
+      );
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
         contractAddress,
@@ -73,7 +77,7 @@ const SmallUintField = () => {
     if (address) {
       fetchSmallUint();
     }
-  }, [address]);
+  }, [address, fetchSmallUint]);
 
   return (
     <div className="bg-white p-4 rounded shadow-md space-y-4">
