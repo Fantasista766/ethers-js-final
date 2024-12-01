@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ethers.js Final Project
 
-## Getting Started
+This repository contains the final project built with **Ethers.js**, **Next.js**, and **TypeScript**, designed for seamless blockchain interactions. The application demonstrates wallet management, token operations, and contract interaction on the Ethereum blockchain.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Wallet Connection:** Easily connect to MetaMask or other wallets using `wagmi` and `ConnectKit`.
+- **Network Switching:** Switch between Ethereum networks such as Sepolia.
+- **Token Operations:** Interact with ERC-20 tokens, check allowances, and approve tokens for spending.
+- **Contract Interaction:** View and update contract state variables.
+- **Transaction Management:** Send ETH between addresses.
+
+## Technologies Used
+
+- **Framework:** [Next.js](https://nextjs.org/)
+- **Blockchain Library:** [Ethers.js](https://docs.ethers.org/)
+- **UI Components:** [Tailwind CSS](https://tailwindcss.com/) for styling
+- **Wallet Management:** [Wagmi](https://wagmi.sh/) and [ConnectKit](https://docs.connectkit.dev/)
+- **TypeScript:** For robust type safety
+
+## Installation
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/Fantasista766/ethers-js-final.git
+   cd ethers-js-final
+   ```
+
+2. **Install Dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Environment Variables**
+   Create a `.env.local` file in the root of the project and add the following:
+
+   ```plaintext
+   NEXT_PUBLIC_INFURA_ID=your_infura_project_id
+   NEXT_PUBLIC_ALCHEMY_KEY=your_alchemy_api_key
+   ```
+
+4. **Run the Application**
+
+   - **Development:**
+     ```bash
+     npm run dev
+     ```
+   - **Production Build:**
+     ```bash
+     npm run build
+     npm start
+     ```
+
+5. **Access the App**
+   Open your browser and navigate to `http://localhost:3000`.
+
+## Project Structure
+
+```plaintext
+src/
+├── components/        # React components for UI
+├── pages/             # Next.js pages
+├── styles/            # Global and component-level styles
+├── utils/             # Helper functions and configurations
+└── app/               # Main app structure
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm run dev` - Run the development server
+- `npm run build` - Build the app for production
+- `npm run start` - Start the production server
+- `npm run lint` - Run ESLint checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contributions
 
-## Learn More
+Contributions are welcome! Please open an issue or submit a pull request.
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is licensed under the [MIT License](./LICENSE).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Acknowledgements
 
-## Deploy on Vercel
+- [Ethers.js Documentation](https://docs.ethers.org/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Wagmi](https://wagmi.sh/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Made with ❤️ by Fantasista766.
+
+### Что включено:
+
+1. **Описание проекта** с акцентом на его функциональность.
+2. **Установка и запуск**: пошаговые инструкции.
+3. **Структура проекта** для понимания, как организован код.
